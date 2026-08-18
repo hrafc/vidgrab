@@ -11,14 +11,14 @@ VIDGRAB is a modern video downloader built with HTML, CSS, JavaScript, Node.js, 
 
 5.Now go to this website "https://nodejs.org/en/download" and install Node.js or the next step wont work  
 
-5.When all files are in the folder write "CMD" in the address bar and hit "ENTER" it will open a command prompt  
+6.When all files are in the folder write "CMD" in the address bar and hit "ENTER" it will open a command prompt  
 
-6.In the command prompt type "npm install" and when it will be installed type "npm start" but still dont open the site  
+7.In the command prompt type "npm install" and when it will be installed type "npm start" but still dont open the site  
 
-7.Now you need to install "Deno" here is how  
+8.Now you need to install "Deno" here is how  
 
-8.Open PowerShell on your computer and type "irm https://deno.land/install.ps1 | iex" now u succesfully installed Deno  
+9.Open PowerShell on your computer and type "irm https://deno.land/install.ps1 | iex" now u succesfully installed Deno  
 
-9.Go back to the command prompt and press CTRL and left click on this "http://localhost:3000" or just paste it and put it in google chrome url  
+10.Go back to the command prompt and press CTRL and left click on this "http://localhost:3000" or just paste it and put it in google chrome url  
 
-10.Now you are ready to go just find a video on youtube copy the video lind paste it in the vidgram hit download and just wait :-)  
+11.Now you are ready to go just find a video on youtube copy the video lind paste it in the vidgram hit download and just wait :-)  
