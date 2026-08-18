@@ -9,6 +9,8 @@ VIDGRAB is a modern video downloader built with HTML, CSS, JavaScript, Node.js, 
 
 4.Go on this website : "https://www.gyan.dev/ffmpeg/builds/" and here download : "ffmpeg-release-essentials.zip" again go to the "FILE EXPLORER" find the "ffmpeg-release-essentials.zip" and extact it then find file "BIN" open it and find this file inside "ffmpeg.exe" copy it and paste it inside of your vidgrab folder  
 
+5.Now go to this website "https://nodejs.org/en/download" and install Node.js or the next step wont work  
+
 5.When all files are in the folder write "CMD" in the address bar and hit "ENTER" it will open a command prompt  
 
 6.In the command prompt type "npm install" and when it will be installed type "npm start" but still dont open the site  
