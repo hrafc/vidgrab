@@ -1,0 +1,735 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>VIDGRAB — Video Downloader</title>
+
+<style>
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+:root {
+    --bg: #08090d;
+    --panel: #11131a;
+    --panel2: #171923;
+    --border: rgba(255,255,255,.09);
+    --text: #f5f7ff;
+    --muted: #9298aa;
+    --accent: #7c5cff;
+    --accent2: #9c83ff;
+    --danger: #ff5577;
+    --success: #43e39a;
+}
+
+body {
+    min-height: 100vh;
+    font-family: Inter, Arial, sans-serif;
+    color: var(--text);
+    background:
+        radial-gradient(circle at 20% 10%, rgba(124,92,255,.18), transparent 30%),
+        radial-gradient(circle at 80% 30%, rgba(0,200,255,.08), transparent 25%),
+        var(--bg);
+}
+
+/* ================= HEADER ================= */
+
+header {
+    height: 76px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 6%;
+    backdrop-filter: blur(20px);
+    background: rgba(8,9,13,.7);
+    position: sticky;
+    top: 0;
+    z-index: 20;
+}
+
+.logo {
+    font-size: 24px;
+    font-weight: 900;
+    letter-spacing: -1px;
+}
+
+.logo span {
+    color: var(--accent2);
+}
+
+.header-right {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+}
+
+.header-btn {
+    border: 1px solid var(--border);
+    background: var(--panel);
+    color: var(--text);
+    width: 42px;
+    height: 42px;
+    border-radius: 13px;
+    cursor: pointer;
+    transition: .2s;
+}
+
+.header-btn:hover {
+    background: var(--panel2);
+    transform: translateY(-2px);
+}
+
+/* ================= MAIN ================= */
+
+main {
+    width: min(1000px, 92%);
+    margin: auto;
+    padding: 80px 0 60px;
+}
+
+.hero {
+    text-align: center;
+    margin-bottom: 42px;
+}
+
+.badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    padding: 8px 14px;
+    border-radius: 999px;
+    background: rgba(124,92,255,.12);
+    border: 1px solid rgba(124,92,255,.25);
+    color: #bcaeff;
+    font-size: 13px;
+    font-weight: 700;
+    margin-bottom: 22px;
+}
+
+.badge-dot {
+    width: 7px;
+    height: 7px;
+    background: var(--success);
+    border-radius: 50%;
+    box-shadow: 0 0 12px var(--success);
+}
+
+h1 {
+    font-size: clamp(42px, 7vw, 76px);
+    line-height: .95;
+    letter-spacing: -4px;
+    margin-bottom: 20px;
+}
+
+.gradient {
+    background: linear-gradient(90deg, #fff, #a892ff, #6dcbff);
+    -webkit-background-clip: text;
+    color: transparent;
+}
+
+.subtitle {
+    max-width: 600px;
+    margin: auto;
+    color: var(--muted);
+    font-size: 17px;
+    line-height: 1.6;
+}
+
+/* ================= DOWNLOADER ================= */
+
+.downloader {
+    background: rgba(17,19,26,.85);
+    border: 1px solid var(--border);
+    border-radius: 28px;
+    padding: 28px;
+    box-shadow: 0 25px 80px rgba(0,0,0,.3);
+}
+
+.input-area {
+    display: flex;
+    gap: 12px;
+}
+
+.url-input {
+    flex: 1;
+    height: 60px;
+    background: #0b0d12;
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    color: white;
+    padding: 0 18px;
+    font-size: 16px;
+    outline: none;
+    transition: .2s;
+}
+
+.url-input:focus {
+    border-color: rgba(124,92,255,.7);
+    box-shadow: 0 0 0 4px rgba(124,92,255,.08);
+}
+
+.paste-btn {
+    height: 60px;
+    padding: 0 20px;
+    border-radius: 16px;
+    border: 1px solid var(--border);
+    background: var(--panel2);
+    color: white;
+    cursor: pointer;
+    font-weight: 700;
+}
+
+.download-btn {
+    height: 60px;
+    padding: 0 28px;
+    border: 0;
+    border-radius: 16px;
+    background: linear-gradient(135deg, var(--accent), #5e8cff);
+    color: white;
+    font-size: 15px;
+    font-weight: 800;
+    cursor: pointer;
+    box-shadow: 0 10px 30px rgba(124,92,255,.25);
+    transition: .2s;
+}
+
+.download-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 15px 35px rgba(124,92,255,.35);
+}
+
+.download-btn:active {
+    transform: scale(.98);
+}
+
+/* ================= OPTIONS ================= */
+
+.options {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 18px;
+    gap: 15px;
+    flex-wrap: wrap;
+}
+
+.option-group {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.option-label {
+    color: var(--muted);
+    font-size: 13px;
+}
+
+select {
+    background: #0b0d12;
+    color: white;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 9px 12px;
+    outline: none;
+}
+
+/* ================= DROP ZONE ================= */
+
+.drop-zone {
+    margin-top: 20px;
+    border: 1px dashed rgba(255,255,255,.14);
+    border-radius: 18px;
+    padding: 22px;
+    text-align: center;
+    color: var(--muted);
+    transition: .2s;
+}
+
+.drop-zone.dragging {
+    border-color: var(--accent);
+    background: rgba(124,92,255,.08);
+    color: white;
+}
+
+/* ================= RESULT ================= */
+
+.result {
+    display: none;
+    margin-top: 22px;
+    background: #0c0e14;
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 20px;
+}
+
+.result.show {
+    display: block;
+    animation: appear .3s ease;
+}
+
+@keyframes appear {
+    from {
+        opacity: 0;
+        transform: translateY(8px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.result-top {
+    display: flex;
+    gap: 16px;
+    align-items: center;
+}
+
+.preview {
+    width: 150px;
+    height: 90px;
+    border-radius: 13px;
+    background:
+        linear-gradient(135deg, #171827, #29234b);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 30px;
+    flex-shrink: 0;
+}
+
+.result-info {
+    flex: 1;
+}
+
+.result-title {
+    font-size: 18px;
+    font-weight: 800;
+    margin-bottom: 7px;
+    word-break: break-word;
+}
+
+.result-meta {
+    color: var(--muted);
+    font-size: 13px;
+}
+
+.status {
+    margin-top: 18px;
+    color: var(--muted);
+    font-size: 13px;
+}
+
+.progress-container {
+    height: 8px;
+    border-radius: 99px;
+    background: #1b1e28;
+    overflow: hidden;
+    margin-top: 10px;
+}
+
+.progress {
+    height: 100%;
+    width: 0%;
+    border-radius: inherit;
+    background: linear-gradient(90deg, var(--accent), #6dcaff);
+    transition: width .15s linear;
+}
+
+/* ================= HISTORY ================= */
+
+.history {
+    margin-top: 45px;
+}
+
+.section-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 18px;
+}
+
+.section-header h2 {
+    font-size: 22px;
+}
+
+.clear-btn {
+    background: transparent;
+    color: var(--muted);
+    border: 0;
+    cursor: pointer;
+}
+
+.history-list {
+    display: grid;
+    gap: 10px;
+}
+
+.history-item {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    padding: 15px;
+    border-radius: 15px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+}
+
+.history-icon {
+    width: 45px;
+    height: 45px;
+    border-radius: 12px;
+    display: grid;
+    place-items: center;
+    background: rgba(124,92,255,.12);
+}
+
+.history-info {
+    flex: 1;
+    min-width: 0;
+}
+
+.history-title {
+    font-weight: 700;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+.history-url {
+    color: var(--muted);
+    font-size: 12px;
+    margin-top: 4px;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+.empty {
+    color: var(--muted);
+    text-align: center;
+    padding: 30px;
+    border: 1px dashed var(--border);
+    border-radius: 15px;
+}
+
+/* ================= FOOTER ================= */
+
+footer {
+    text-align: center;
+    color: #626879;
+    font-size: 12px;
+    padding: 30px;
+}
+
+/* ================= MOBILE ================= */
+
+@media(max-width: 700px) {
+
+    main {
+        padding-top: 50px;
+    }
+
+    h1 {
+        letter-spacing: -2px;
+    }
+
+    .downloader {
+        padding: 18px;
+        border-radius: 22px;
+    }
+
+    .input-area {
+        flex-direction: column;
+    }
+
+    .paste-btn,
+    .download-btn {
+        width: 100%;
+    }
+
+    .result-top {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .preview {
+        width: 100%;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<header>
+
+    <div class="logo">
+        VID<span>GRAB</span>
+    </div>
+
+    <div class="header-right">
+        <button class="header-btn" onclick="toggleTheme()" id="themeBtn">
+            🌙
+        </button>
+    </div>
+
+</header>
+
+
+<main>
+
+    <section class="hero">
+
+        <div class="badge">
+            <span class="badge-dot"></span>
+            Fast & Simple
+        </div>
+
+        <h1>
+            Download.<br>
+            <span class="gradient">Done.</span>
+        </h1>
+
+        <p class="subtitle">
+            Paste a video link and let VIDGRAB handle the download.
+        </p>
+
+    </section>
+
+
+    <section class="downloader">
+
+        <div class="input-area">
+
+            <input
+                id="urlInput"
+                class="url-input"
+                type="url"
+                placeholder="Paste video link here..."
+                autocomplete="off"
+            >
+
+            <button class="paste-btn" onclick="pasteLink()">
+                📋 Paste
+            </button>
+
+            <button class="download-btn" onclick="analyzeLink()">
+                🔽 Download
+            </button>
+
+        </div>
+
+
+        <div class="options">
+
+            <div class="option-group">
+
+                <span class="option-label">
+                    Format
+                </span>
+
+                <select id="format">
+                    <option value="mp4">MP4 Video</option>
+                    <option value="webm">WebM Video</option>
+                    <option value="mp3">MP3 Audio</option>
+                </select>
+
+            </div>
+
+
+            <div class="option-group">
+
+                <span class="option-label">
+                    Quality
+                </span>
+
+                <select id="quality">
+                    <option>Original</option>
+                    <option>1080p</option>
+                    <option>720p</option>
+                    <option>480p</option>
+                    <option>360p</option>
+                </select>
+
+            </div>
+
+        </div>
+
+
+        <div
+            class="drop-zone"
+            id="dropZone"
+        >
+            🔗 Paste a video URL here or drag one in
+        </div>
+
+
+        <div class="result" id="result">
+
+            <div class="result-top">
+
+                <div class="preview">
+                    🎬
+                </div>
+
+                <div class="result-info">
+
+                    <div
+                        class="result-title"
+                        id="resultTitle"
+                    >
+                        Video ready
+                    </div>
+
+                    <div
+                        class="result-meta"
+                        id="resultMeta"
+                    >
+                        Ready to download
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="status" id="status">
+                Preparing...
+            </div>
+
+            <div class="progress-container">
+
+                <div
+                    class="progress"
+                    id="progress"
+                ></div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <section class="history">
+
+        <div class="section-header">
+
+            <h2>
+                Recent downloads
+            </h2>
+
+            <button
+                class="clear-btn"
+                onclick="clearHistory()"
+            >
+                Clear
+            </button>
+
+        </div>
+
+        <div
+            class="history-list"
+            id="historyList"
+        ></div>
+
+    </section>
+
+</main>
+
+
+<footer>
+    VIDGRAB • Download content only when you have permission to do so.
+</footer>
+
+
+
+<script>
+const urlInput=document.getElementById("urlInput");
+const result=document.getElementById("result");
+const progress=document.getElementById("progress");
+const statusText=document.getElementById("status");
+const resultTitle=document.getElementById("resultTitle");
+const resultMeta=document.getElementById("resultMeta");
+const historyList=document.getElementById("historyList");
+const dropZone=document.getElementById("dropZone");
+const formatSelect=document.getElementById("format");
+const qualitySelect=document.getElementById("quality");
+
+function validUrl(v){try{const u=new URL(v);return ["http:","https:"].includes(u.protocol)}catch{return false}}
+async function pasteLink(){try{urlInput.value=await navigator.clipboard.readText();urlInput.focus()}catch{alert("Clipboard access was blocked. Paste with Ctrl + V.")}}
+async function analyzeLink(){
+ const url=urlInput.value.trim();
+ if(!url)return showError("Please paste a video link first.");
+ if(!validUrl(url))return showError("That doesn't look like a valid HTTP/HTTPS URL.");
+ result.classList.add("show");progress.style.width="8%";resultTitle.textContent="Analyzing link...";resultMeta.textContent="yt-dlp is inspecting the media";statusText.textContent="Connecting...";removeButtons();
+ try{
+  const r=await fetch("/api/info",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({url})});
+  const d=await r.json();if(!r.ok)throw Error(d.error||"Could not analyze this URL.");
+  progress.style.width="100%";renderInfo(d,url);
+ }catch(e){showError("❌ "+e.message)}
+}
+function renderInfo(d,url){
+ const p=document.querySelector(".preview");
+ if(d.thumbnail)p.innerHTML=`<img src="${escAttr(d.thumbnail)}" style="width:100%;height:100%;object-fit:cover;border-radius:13px" onerror="this.remove()">`;else p.textContent="🎬";
+ resultTitle.textContent=d.title||"Untitled video";
+ const dur=duration(d.duration), up=d.uploader?` • ${escapeHTML(d.uploader)}`:"";
+ resultMeta.textContent=`${dur?dur+" • ":""}${escapeHTML(d.ext||"media")}${up}`;
+ statusText.textContent="✅ Ready. Choose format and quality, then download.";
+ createDownloadButton(url,d.title||"VIDGRAB download");
+}
+function createDownloadButton(url,title){
+ removeButtons();
+ const b=document.createElement("button");b.id="realDownloadBtn";b.textContent="⬇️ Download with VIDGRAB";
+ b.style="margin-top:18px;width:100%;height:52px;border:0;border-radius:13px;background:linear-gradient(135deg,#7c5cff,#5e8cff);color:white;font-weight:800;cursor:pointer";
+ b.onclick=()=>startDownload(url,title);result.appendChild(b);
+}
+async function startDownload(url,title){
+ const b=document.getElementById("realDownloadBtn");if(b){b.disabled=true;b.textContent="⏳ Starting...";b.style.opacity=".7"}
+ resultTitle.textContent=title;resultMeta.textContent=`${formatSelect.value.toUpperCase()} • ${qualitySelect.value}`;statusText.textContent="Starting yt-dlp...";progress.style.width="0%";
+ try{
+  const r=await fetch("/api/download",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({url,format:formatSelect.value,quality:qualitySelect.value})});
+  const d=await r.json();if(!r.ok)throw Error(d.error||"Could not start download.");
+  await monitor(d.jobId,title,url);
+ }catch(e){showError("❌ "+e.message)}
+ finally{if(b){b.disabled=false;b.textContent="⬇️ Download with VIDGRAB";b.style.opacity="1"}}
+}
+async function monitor(id,title,url){
+ const poll=async()=>{
+  const r=await fetch(`/api/status/${encodeURIComponent(id)}`),d=await r.json();if(!r.ok)throw Error(d.error||"Status error");
+  progress.style.width=Math.max(0,Math.min(100,Number(d.percent)||0))+"%";
+  statusText.textContent=d.status==="completed"?"✅ Download finished.":`${d.message||"Downloading..."} • ${(Number(d.percent)||0).toFixed(1)}%${d.speed?" • "+d.speed:""}${d.eta?" • ETA "+d.eta:""}`;
+  if(d.status==="completed"){addHistory(title,url);const a=document.createElement("a");a.id="finishedFileLink";a.href=`/api/file/${encodeURIComponent(id)}`;a.textContent="💾 Save finished file";a.style="display:block;margin-top:14px;text-align:center;text-decoration:none;font-weight:800;color:#cfc5ff";result.appendChild(a);return}
+  if(d.status==="error")throw Error(d.message||"yt-dlp failed");
+  setTimeout(()=>poll().catch(e=>showError("❌ "+e.message)),700);
+ };
+ await poll();
+}
+function removeButtons(){document.getElementById("realDownloadBtn")?.remove();document.getElementById("finishedFileLink")?.remove()}
+function showError(m){result.classList.add("show");resultTitle.textContent="Something went wrong";resultMeta.textContent="Check the URL and server output";statusText.textContent=m;progress.style.width="0%";removeButtons()}
+function duration(v){if(!Number.isFinite(Number(v)))return "";v=Math.max(0,Math.floor(Number(v)));const h=Math.floor(v/3600),m=Math.floor(v%3600/60),s=v%60;return h?`${h}:${String(m).padStart(2,"0")}:${String(s).padStart(2,"0")}`:`${m}:${String(s).padStart(2,"0")}`}
+function getHistory(){return JSON.parse(localStorage.getItem("vidgrab_history")||"[]")}
+function saveHistory(x){localStorage.setItem("vidgrab_history",JSON.stringify(x))}
+function addHistory(title,url){let h=getHistory().filter(x=>x.url!==url);h.unshift({title,url,date:new Date().toLocaleString()});saveHistory(h.slice(0,10));renderHistory()}
+function renderHistory(){const h=getHistory();historyList.innerHTML=h.length?h.map(x=>`<div class="history-item"><div class="history-icon">🎬</div><div class="history-info"><div class="history-title">${escapeHTML(x.title)}</div><div class="history-url">${escapeHTML(x.url)}</div></div><button class="header-btn" onclick="reuseLink('${encodeURIComponent(x.url)}')">↗</button></div>`).join(""):`<div class="empty">Your downloads will appear here.</div>`}
+function reuseLink(u){urlInput.value=decodeURIComponent(u);urlInput.focus()}
+function clearHistory(){localStorage.removeItem("vidgrab_history");renderHistory()}
+function escapeHTML(v){return String(v).replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;").replaceAll('"',"&quot;").replaceAll("'","&#039;")}
+function escAttr(v){return escapeHTML(v)}
+dropZone.addEventListener("dragover",e=>{e.preventDefault();dropZone.classList.add("dragging")});
+dropZone.addEventListener("dragleave",()=>dropZone.classList.remove("dragging"));
+dropZone.addEventListener("drop",e=>{e.preventDefault();dropZone.classList.remove("dragging");const t=e.dataTransfer.getData("text");if(t)urlInput.value=t});
+urlInput.addEventListener("keydown",e=>{if(e.key==="Enter")analyzeLink()});
+function toggleTheme(){const light=document.body.dataset.theme==="light";document.body.dataset.theme=light?"":"light";const vals=light?["#08090d","#11131a","#171923","#f5f7ff","#9298aa"]:["#f5f6fb","#ffffff","#f0f1f6","#11131a","#626879"];["--bg","--panel","--panel2","--text","--muted"].forEach((k,i)=>document.body.style.setProperty(k,vals[i]));document.getElementById("themeBtn").textContent=light?"🌙":"☀️"}
+renderHistory();
+</script>
+
+
+</body>
+</html>
